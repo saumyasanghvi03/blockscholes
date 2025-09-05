@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 
 # ---- CONFIG ----
-CMC_API_KEY = "142f0bad-d682-4cc0-ac74-a0cfc7ea4c55"  # Replace with your actual CoinMarketCap API key
+CMC_API_KEY = "142f0bad-d682-4cc0-ac74-a0cfc7ea4c55"  # Replace with your CoinMarketCap API key
 
 def fetch_price(symbol):
     url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
@@ -49,13 +49,27 @@ st.markdown("""
 <style>
 body, .main, .block-container, [data-testid="stAppViewContainer"] { background: #0a0c14 !important; }
 [data-testid="stSidebarContent"] { background: #181d27; }
-h1, h2, h3, .stTextInput>div>div>input, label, .stNumberInput>div>div>input, .stRadio>label, .stSelectbox>div>div>div>input { color: #ffffff !important; }
-.stTextInput>div>div>input, .stNumberInput>div>div>input, .stSelectbox>div>div>div>input {
-    background-color: #1a1d26 !important; color: #ffffff !important; border: 1px solid #393939 !important; border-radius: 6px !important;
+h1, h2, h3, label, .stRadio>label, .stSelectbox>div>div>div>input { color: #ffffff !important; }
+
+/* White input boxes with black text */
+.stTextInput > div > div > input,
+.stNumberInput > div > div > input,
+.stSelectbox > div > div > div > input {
+    background-color: #fff !important;
+    color: #000 !important;
+    border: 1px solid #393939 !important;
+    border-radius: 6px !important;
 }
+
+/* Button styling */
 [data-testid="stFormSubmitButton"]>button, .stButton>button {
-    background-color: #243923 !important; color: #00ff84 !important; border-radius: 8px; font-weight: bold;
+    background-color: #243923 !important;
+    color: #00ff84 !important;
+    border-radius: 8px;
+    font-weight: bold;
 }
+
+/* Finance metric blocks */
 .metric-green { background: #243923; color: #00ff84; border-radius: 8px; padding: 8px 14px; margin: 3px; }
 .metric-red { background: #401818; color: #ff4747; border-radius: 8px; padding: 8px 14px; margin: 3px; }
 .metric-neutral { background: #23272c; color: #e3e3e3; border-radius: 8px; padding: 8px 14px; margin: 3px; }
