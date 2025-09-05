@@ -47,17 +47,18 @@ def calculate_pnl(entry_price, exit_price, contract_size, side='long'):
 # ---- Custom Styling ----
 st.markdown("""
 <style>
-body, .main, .block-container  {background: #0a0c14 !important;}
-[data-testid="stAppViewContainer"] { background-color: #14171c;}
-[data-testid="stSidebarContent"] { background: #181d27;}
-h1, h2, h3, .stTextInput>div>div>input, label { color: #fbfbfb !important; }
-.st-bw { color: #fbfbfb; }
-thead th {background: #223322 !important;}
-.css-ffhzg2 { color: #fbfbfb !important;}
-
-.metric-green {background: #243923; color: #00ff84; border-radius: 8px; padding: 8px 14px; margin: 3px;}
-.metric-red {background: #401818; color: #ff4747; border-radius: 8px; padding: 8px 14px; margin: 3px;}
-.metric-neutral {background: #23272c; color: #e3e3e3; border-radius: 8px; padding: 8px 14px; margin: 3px;}
+body, .main, .block-container, [data-testid="stAppViewContainer"] { background: #0a0c14 !important; }
+[data-testid="stSidebarContent"] { background: #181d27; }
+h1, h2, h3, .stTextInput>div>div>input, label, .stNumberInput>div>div>input, .stRadio>label, .stSelectbox>div>div>div>input { color: #ffffff !important; }
+.stTextInput>div>div>input, .stNumberInput>div>div>input, .stSelectbox>div>div>div>input {
+    background-color: #1a1d26 !important; color: #ffffff !important; border: 1px solid #393939 !important; border-radius: 6px !important;
+}
+[data-testid="stFormSubmitButton"]>button, .stButton>button {
+    background-color: #243923 !important; color: #00ff84 !important; border-radius: 8px; font-weight: bold;
+}
+.metric-green { background: #243923; color: #00ff84; border-radius: 8px; padding: 8px 14px; margin: 3px; }
+.metric-red { background: #401818; color: #ff4747; border-radius: 8px; padding: 8px 14px; margin: 3px; }
+.metric-neutral { background: #23272c; color: #e3e3e3; border-radius: 8px; padding: 8px 14px; margin: 3px; }
 </style>
 """, unsafe_allow_html=True)
 
