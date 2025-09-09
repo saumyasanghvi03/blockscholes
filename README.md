@@ -1,99 +1,118 @@
-# blockscholes
+# 🧮 BlockScholes – Crypto Futures Margin Calculator
 
-🧮 BlockScholes – Crypto Futures Margin Calculator
-A Streamlit application that helps you compute the required margin, liquidation price, and P&L for any crypto futures contract. It features live crypto price fetching via CoinMarketCap API and displays results with a finance-friendly UI!
+A **Streamlit application** for quick, reliable crypto futures margin, liquidation, and P&L calculations with live crypto pricing.
 
-Features
-Live Price Fetching: Get the latest price for any crypto symbol (BTC, ETH, SOL, etc.) using CoinMarketCap.
+---
 
-Futures Calculations:
+## 🚀 Features
 
-Initial Margin
+- **Live Crypto Prices:** Fetches the latest prices from CoinMarketCap for symbols like BTC, ETH, SOL, etc.
+- **Comprehensive Futures Calculations:**
+  - Initial Margin
+  - Maintenance Margin
+  - Liquidation Price (long & short)
+  - P&L at exit price
+- **Modern UI:**  
+  - Dark mode  
+  - Highlighted results in summary blocks  
+  - Clear parameter entry and error handling
+- **Instant Summary Table:**  
+  Green/red visual cues for quick reading.
+- **Built-in Educational Notice:**  
+  Reminds users to double-check values before trading.
 
-Maintenance Margin
+---
 
-Liquidation Price (for both long and short positions)
+## ⚙️ Getting Started
 
-P&L at exit price
+**1. Clone the Repository**
 
-Custom Styling: Stylish dark mode, highlighted result blocks, and user-friendly interface.
-
-Summary Table: Quick overview of results with green/red color cues.
-
-Educational Notice: Built-in reminders to cross-verify calculations before trading.
-
-How to Run
-Clone the Repository
-
-bash
+```bash
 git clone https://github.com/saumyasanghvi03/blockscholes.git
 cd blockscholes
-Install Dependencies
+```
 
-bash
+**2. Install Dependencies**
+
+```bash
 pip install streamlit pandas requests
-Configure API Key
+```
 
-Replace the provided placeholder API key in app.py:
+**3. Add Your CoinMarketCap API Key**
 
-python
+Edit `app.py` and set:
+
+```python
 CMC_API_KEY = "YOUR_CMC_API_KEY"
-Start the Streamlit App
+```
 
-bash
+**4. Launch the App**
+
+```bash
 streamlit run app.py
-Open in Browser
+```
 
-Go to http://localhost:8501 to use the app.
+Then, open [http://localhost:8501](http://localhost:8501/) in your browser.
 
-Parameters & Usage
-Crypto Symbol: e.g. BTC, ETH, SOL (case-insensitive)
+---
 
-Contract Size: USD value or coin units of your contract
+## 📝 Parameters & Usage
 
-Leverage: Select from 1x, 3x, 5x, 10x, 20x, 50x, 100x
+| Parameter           | Description                                   | Example    |
+|---------------------|-----------------------------------------------|------------|
+| Crypto Symbol       | Ticker (case-insensitive)                     | BTC, ETH   |
+| Contract Size       | Value in USD or number of coins                | 1000       |
+| Leverage            | Select leverage                                | 10         |
+| Maintenance Margin  | Enter exchange's maintenance margin (%)        | 0.5        |
+| Account Balance     | (Optional) Wallet size in USD                  | 2000       |
+| Entry / Exit Price  | Set manual or leave entry at 0 for live price  | 30000      |
+| Side                | `long` or `short`                             | long       |
 
-Maintenance Margin %: Enter the exchange's maintenance margin value
+---
 
-Account Balance (optional): Your wallet balance for information only
+## 📊 Outputs
 
-Entry/Exit Price: Leave entry price at 0 to fetch live, or set manually; provide exit price for P&L
+- **Initial Margin:** Required to open position
+- **Maintenance Margin:** Minimum to avoid liquidation
+- **Liquidation Price:** Trigger for forced closure (long/short)
+- **P&L:** Projected profit/loss at exit price
 
-Side: "long" or "short" position
+---
 
-Calculated Outputs
-Initial Margin: Funds needed to open your position
+## 🧪 Example Calculation
 
-Maintenance Margin: Minimum required to avoid liquidation
+| Input           | Value   |
+|-----------------|---------|  
+| Crypto Symbol   | BTC     |
+| Contract Size   | 1000    |
+| Leverage        | 10      |
+| Maintenance %   | 0.5     |
+| Entry Price     | 30000   |
+| Side            | long    |
 
-Liquidation Price: Estimated trigger for forced closure
+**Sample Output:**
 
-P&L: Projected profit or loss at exit price
+- Initial Margin: `$100.00`
+- Maintenance Margin: `$5.00`
+- Liquidation Price: `$27,200.00`
+- P&L (at exit): _(depends on exit price)_
 
-Example
-Input	Value
-Crypto Symbol	BTC
-Contract Size	1000
-Leverage	10
-Maintenance %	0.5
-Entry Price	30000
-Side	long
-Output:
+---
 
-Initial Margin: $100.0000
+## 🎨 Customization
 
-Maintenance Margin: $5.0000
+Modify UI styles and colors in the markdown/CSS portion of `app.py` for a tailored look.
 
-Liquidation Price: $27,200.0000
+---
 
-P&L (at exit): (based on exit price)
+## ⚠️ Disclaimer
 
-Customization
-Update UI styles and color themes in the markdown CSS section of app.py.
+_For educational use only. Always verify calculations with your trading platform before making any real trades._
 
-Disclaimer
-For educational use only. Double-check all calculations with your broker/platform before live trading!
+---
 
-Author: Saumya Sanghvi
-License: MIT
-Feedback: Create an issue or pull request on the repo.
+**Author:** Saumya Sanghvi  
+**License:** MIT  
+**Feedback:** File an issue or PR on this repo.
+
+---
