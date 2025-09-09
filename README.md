@@ -1,118 +1,112 @@
-# 🧮 BlockScholes – Crypto Futures Margin Calculator
+# 🏛️ BlockScholes Prime Desk  
+**Elite Crypto Derivatives Analytics for HNI & Institutional Users**
 
-A **Streamlit application** for quick, reliable crypto futures margin, liquidation, and P&L calculations with live crypto pricing.
-
----
-
-## 🚀 Features
-
-- **Live Crypto Prices:** Fetches the latest prices from CoinMarketCap for symbols like BTC, ETH, SOL, etc.
-- **Comprehensive Futures Calculations:**
-  - Initial Margin
-  - Maintenance Margin
-  - Liquidation Price (long & short)
-  - P&L at exit price
-- **Modern UI:**  
-  - Dark mode  
-  - Highlighted results in summary blocks  
-  - Clear parameter entry and error handling
-- **Instant Summary Table:**  
-  Green/red visual cues for quick reading.
-- **Built-in Educational Notice:**  
-  Reminds users to double-check values before trading.
+> *Modelled for the blockchain age, inspired by Black-Scholes, built for those managing serious digital wealth.*
 
 ---
 
-## ⚙️ Getting Started
+## 🌟 Why BlockScholes?
 
-**1. Clone the Repository**
+Welcome to a quant platform designed for **sophisticated traders, HNIs, and professional desks**.  
+BlockScholes delivers real-time derivatives analytics, streamlined with the gravitas of the world's most trusted financial models.
+
+---
+
+## 💎 Premium Features
+
+- **Live Institutional-grade Pricing:** Instant price feeds for major tokens (BTC, ETH, etc.) integrated with CoinMarketCap's premium endpoints.
+- **HNI Margin Engine:**
+  - Tailored initial/margin projections for large portfolios  
+  - Liquidation triggers for high-stakes positions  
+  - "What-if" scenario P&L at scale
+- **Inspired by Black-Scholes:**  
+  Seamless logic and interface echoing the mathematical discipline of the legendary Black-Scholes framework.
+- **Executive Presentation:**  
+  Luxurious dark mode, minimalist analytics dashboard, error messages crafted for speed—not distraction
+- **Secure & Discreet:**  
+  Local run, zero data exposure, absolute privacy—fit for the discerning desk
+
+---
+
+## 🏁 Get Started Like a Prime Desk
 
 ```bash
 git clone https://github.com/saumyasanghvi03/blockscholes.git
 cd blockscholes
-```
-
-**2. Install Dependencies**
-
-```bash
 pip install streamlit pandas requests
 ```
 
-**3. Add Your CoinMarketCap API Key**
-
-Edit `app.py` and set:
+Configure your API key in `app.py`:
 
 ```python
 CMC_API_KEY = "YOUR_CMC_API_KEY"
 ```
-
-**4. Launch the App**
-
+Launch with:
 ```bash
 streamlit run app.py
 ```
-
-Then, open [http://localhost:8501](http://localhost:8501/) in your browser.
-
----
-
-## 📝 Parameters & Usage
-
-| Parameter           | Description                                   | Example    |
-|---------------------|-----------------------------------------------|------------|
-| Crypto Symbol       | Ticker (case-insensitive)                     | BTC, ETH   |
-| Contract Size       | Value in USD or number of coins                | 1000       |
-| Leverage            | Select leverage                                | 10         |
-| Maintenance Margin  | Enter exchange's maintenance margin (%)        | 0.5        |
-| Account Balance     | (Optional) Wallet size in USD                  | 2000       |
-| Entry / Exit Price  | Set manual or leave entry at 0 for live price  | 30000      |
-| Side                | `long` or `short`                             | long       |
+Access dashboard at [http://localhost:8501](http://localhost:8501/).
 
 ---
 
-## 📊 Outputs
+## ⚖️ Quant Parameters
 
-- **Initial Margin:** Required to open position
-- **Maintenance Margin:** Minimum to avoid liquidation
-- **Liquidation Price:** Trigger for forced closure (long/short)
-- **P&L:** Projected profit/loss at exit price
-
----
-
-## 🧪 Example Calculation
-
-| Input           | Value   |
-|-----------------|---------|  
-| Crypto Symbol   | BTC     |
-| Contract Size   | 1000    |
-| Leverage        | 10      |
-| Maintenance %   | 0.5     |
-| Entry Price     | 30000   |
-| Side            | long    |
-
-**Sample Output:**
-
-- Initial Margin: `$100.00`
-- Maintenance Margin: `$5.00`
-- Liquidation Price: `$27,200.00`
-- P&L (at exit): _(depends on exit price)_
+| Parameter           | Elite Desk Role                | Example      |
+|---------------------|-------------------------------|-------- ------|
+| **Crypto Symbol**   | Asset class                   | BTC, ETH     |
+| **Contract Size**   | Notional value                | 100,000      |
+| **Leverage**        | Portfolio gearing             | 25           |
+| **Margin %**        | Exchange min maintenance      | 0.5          |
+| **Balance**         | HNI portfolio tracker         | 1,000,000    |
+| **Entry/Exit**      | Model live or advanced quotes | 27,750       |
+| **Direction**       | Bull/Bear/Neutral stance      | long         |
 
 ---
 
-## 🎨 Customization
+## 📈 Outputs for Decision-Makers
 
-Modify UI styles and colors in the markdown/CSS portion of `app.py` for a tailored look.
+- **Initial Margin Required**
+- **Maintenance Margin Threshold**
+- **Liquidation Trigger Price**
+- **Projected P&L across exit scenarios**
 
 ---
 
-## ⚠️ Disclaimer
+## 🧑‍💼 Quantitative Example
 
-_For educational use only. Always verify calculations with your trading platform before making any real trades._
+| Input         | Value      |
+|---------------|------------|
+| Symbol        | BTC        |
+| Size          | 250,000    |
+| Leverage      | 20         |
+| MM%           | 0.6        |
+| Entry         | 28,500     |
+| Direction     | short      |
+
+**BlockScholes Output**:  
+- Initial Margin: `$12,500`  
+- Maintenance: `$1,500`  
+- Liquidation Price: `$30,238.10`  
+- P&L: _modeled on exit price_
+
+---
+
+## 🎩 Customization & Privacy
+
+All core logic and interface can be tailored in `app.py`.  
+**No cloud, no telemetry, no leaks—your models, your edge.**
+
+---
+
+## ⚠️ Prime Advisory
+
+_Mathematical rigor for educational and strategic modeling. For trade execution, always cross-verify with your preferred platforms._
 
 ---
 
 **Author:** Saumya Sanghvi  
+**Elite Quant Inspiration:** Black-Scholes, Wall Street Prime Desks  
 **License:** MIT  
-**Feedback:** File an issue or PR on this repo.
+**Discreet Contact:** Issues tab or invite-only collaborations
 
 ---
