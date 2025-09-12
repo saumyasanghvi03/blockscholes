@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from scipy.stats import norm
 
+# ---- CONFIG ----
 CMC_API_KEY = "142f0bad-d682-4cc0-ac74-a0cfc7ea4c55"
 
 def fetch_price(symbol):
@@ -19,6 +20,7 @@ def fetch_price(symbol):
         st.error(f"Error fetching price: {e}")
         return None
 
+# --- OPTION GREEKS ---
 def blackscholes_greeks(S, K, T, r, sigma, option_type='call'):
     d1 = (np.log(S/K) + (r + 0.5*sigma**2)*T) / (sigma * np.sqrt(T))
     d2 = d1 - sigma * np.sqrt(T)
@@ -33,7 +35,7 @@ def blackscholes_greeks(S, K, T, r, sigma, option_type='call'):
                  + r * K * np.exp(-r*T) * norm.cdf(-d2))
         rho = -K * T * np.exp(-r*T) * norm.cdf(-d2)
     gamma = norm.pdf(d1) / (S * sigma * np.sqrt(T))
-    vega = S * norm.pdf(d1) * np.sqrt(T) / 100
+    vega = S * norm.pdf(d1) * np.sqrt(T) / 100  # per 1% move in volatility
     theta /= 365
     return {
         'Delta': delta,
@@ -69,6 +71,7 @@ def calculate_pnl(entry_price, exit_price, contract_size, side='long'):
             return (entry_price - exit_price) * contract_size
     except: return None
 
+# ---- Custom Styling ----
 st.markdown("""
 <style>
 body, .main, .block-container, [data-testid="stAppViewContainer"] { background: #0a0c14 !important; }
@@ -94,6 +97,7 @@ h1, h2, h3, label, .stRadio>label, .stSelectbox>div>div>div>input { color: #ffff
 </style>
 """, unsafe_allow_html=True)
 
+# ---- UI ----
 st.markdown("<h1 style='color:#00ff84;'>🧮 Global Options & Crypto Futures Calculator</h1>", unsafe_allow_html=True)
 st.markdown(
     """<p style='color:#b2ffb2'>Margin, Greeks & risk calculator
@@ -101,7 +105,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# --- Sidebar/UI Input Widgets First ---
 col1, col2 = st.columns([2, 1])
 with col1:
     symbol = st.text_input("Crypto Symbol (e.g., BTC, ETH, SOL)", value="BTC")
@@ -115,7 +118,7 @@ with col2:
     side = st.radio("Position Side", ["long", "short"], horizontal=True)
     fetch_btn = st.button("🔄 Fetch Latest Price")
 
-# --- Live Price Logic ---
+# --- Store and Use Live Price for Greeks ---
 if 'live_price' not in st.session_state:
     st.session_state.live_price = 0.0
 
@@ -131,7 +134,44 @@ if fetch_btn:
     else:
         st.session_state.live_price = 0.0
 
-# --- Margin/P&L area (after widgets) ---
+# --- OPTIONS (Call/Put Greeks) with Manual Override Support ---
+st.markdown("---")
+st.markdown("<h3 style='color:#e9f28d;'>Option Greeks Calculator (Black-Scholes)</h3>", unsafe_allow_html=True)
+with st.expander("Show Greeks Calculator", expanded=True):
+    override_spot = st.checkbox("Override Spot Price (S) manually", value=False)
+    if override_spot:
+        S = st.number_input("Custom Spot Price (S)", min_value=0.0, value=float(st.session_state.live_price if st.session_state.live_price > 0 else 50000.0), key="override_spot")
+    else:
+        S = float(st.session_state.live_price if st.session_state.live_price > 0 else 50000.0)
+        st.markdown(f"Using Live Spot Price (S): **{S:,.2f}**", unsafe_allow_html=True)
+    K = st.number_input("Strike Price (K)", min_value=0.0, value=50000.0, key="greek_k")
+    T = st.number_input("Time to Expiry (years, e.g. 0.25)", min_value=0.001, value=0.25, key="greek_t")
+    r = st.number_input("Risk-Free Rate (annual, decimal, e.g. 0.06)", min_value=0.0, value=0.06, key="greek_r")
+    sigma = st.number_input("Volatility (annual, decimal, e.g. 0.80)", min_value=0.01, value=0.80, key="greek_sigma")
+    option_type = st.selectbox("Option Type", ["call", "put"], index=0, key="greek_type")
+
+    # Instantly calculate Greeks with every change
+    if S > 0 and K > 0 and T > 0 and sigma > 0:
+        greeks = blackscholes_greeks(S, K, T, r, sigma, option_type)
+        gcol1, gcol2, gcol3 = st.columns(3)
+        gcol1.metric("Delta", f"{greeks['Delta']:.4f}")
+        gcol1.metric("Gamma", f"{greeks['Gamma']:.4f}")
+        gcol2.metric("Vega (per 1%)", f"{greeks['Vega']:.4f}")
+        gcol2.metric("Theta (per day)", f"{greeks['Theta']:.4f}")
+        gcol3.metric("Rho", f"{greeks['Rho']:.4f}")
+
+        gdf = pd.DataFrame({"Greek": list(greeks.keys()), "Value": list(greeks.values())})
+        st.markdown("<h4 style='margin-top:20px;color:#fecb2f'>Greeks Table</h4>", unsafe_allow_html=True)
+        st.dataframe(gdf)
+    else:
+        st.info("Waiting for valid input parameters...")
+
+    if override_spot:
+        st.caption("Currently using manually overridden spot price for all calculations.", unsafe_allow_html=True)
+    else:
+        st.caption("Currently using latest live-fetched spot price for all calculations.", unsafe_allow_html=True)
+
+# --- Margin/P&L area (unchanged) ---
 if entry_price > 0.0 and contract_size > 0.0 and leverage > 0:
     ini_margin = calculate_initial_margin(contract_size, leverage)
     maint_margin = calculate_maintenance_margin(contract_size, maintenance_margin_pct)
@@ -169,31 +209,3 @@ if entry_price > 0.0 and contract_size > 0.0 and leverage > 0:
     st.dataframe(df.style.applymap(color_table, subset=['Value']))
 
 st.caption("<b style='color:#888888'>For educational use. Double-check before trading!</b>", unsafe_allow_html=True)
-
-# --- Greeks Calculator at Bottom, Output Follows Input Block ---
-st.markdown("---")
-with st.expander("Option Greeks Calculator (Black-Scholes)", expanded=True):
-    st.markdown("<h3 style='color:#e9f28d;'>Option Greeks Calculator (Black-Scholes)</h3>", unsafe_allow_html=True)
-    override_spot = st.checkbox("Override Spot Price (S) manually", value=False)
-    if override_spot:
-        S = st.number_input("Custom Spot Price (S)", min_value=0.0, value=float(st.session_state.live_price if st.session_state.live_price > 0 else 50000.0), key="override_spot")
-    else:
-        S = float(st.session_state.live_price if st.session_state.live_price > 0 else 50000.0)
-        st.markdown(f"Using Live Spot Price (S): **{S:,.2f}**", unsafe_allow_html=True)
-    K = st.number_input("Strike Price (K)", min_value=0.0, value=50000.0, key="greek_k")
-    T = st.number_input("Time to Expiry (years, e.g. 0.25)", min_value=0.001, value=0.25, key="greek_t")
-    r = st.number_input("Risk-Free Rate (annual, decimal, e.g. 0.06)", min_value=0.0, value=0.06, key="greek_r")
-    sigma = st.number_input("Volatility (annual, decimal, e.g. 0.80)", min_value=0.01, value=0.80, key="greek_sigma")
-    option_type = st.selectbox("Option Type", ["call", "put"], index=0, key="greek_type")
-    st.markdown("----")
-    if S > 0 and K > 0 and T > 0 and sigma > 0:
-        greeks = blackscholes_greeks(S, K, T, r, sigma, option_type)
-        gcol1, gcol2, gcol3 = st.columns(3)
-        gcol1.metric("Delta", f"{greeks['Delta']:.4f}")
-        gcol1.metric("Gamma", f"{greeks['Gamma']:.4f}")
-        gcol2.metric("Vega (per 1%)", f"{greeks['Vega']:.4f}")
-        gcol2.metric("Theta (per day)", f"{greeks['Theta']:.4f}")
-        gcol3.metric("Rho", f"{greeks['Rho']:.4f}")
-        gdf = pd.DataFrame({"Greek": list(greeks.keys()), "Value": list(greeks.values())})
-        st.markdown("<h4 style='margin-top:20px;color:#fecb2f'>Greeks Table</h4>", unsafe_allow_html=True)
-        st.dataframe
