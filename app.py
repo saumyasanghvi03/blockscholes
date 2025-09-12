@@ -109,7 +109,7 @@ h1, h2, h3, label, .stRadio>label, .stSelectbox>div>div>div>input { color: #ffff
 """, unsafe_allow_html=True)
 
 # ---- UI ----
-st.markdown("<h1 style='color:#00ff84;'>🧮 Global Options & Crypto Futures Calculator</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:#00ff84;'>🧮 Global Cryoto Options & Greeks Calculator</h1>", unsafe_allow_html=True)
 st.markdown(
     """<p style='color:#b2ffb2'>Margin, Greeks & risk calculator
     <br> <span style='color:#00fff7'>powered by CoinMarketCap API and Black-Scholes</span>.</p>""",
