@@ -5,7 +5,7 @@ import numpy as np
 from scipy.stats import norm
 
 # ---- CONFIG ----
-CMC_API_KEY = "142f0bad-d682-4cc0-ac74-a0cfc7ea4c55" # Replace with your CoinMarketCap API key
+CMC_API_KEY = "142f0bad-d682-4cc0-ac74-a0cfc7ea4c55"  # Update with your API key if needed
 
 def fetch_price(symbol):
     url = "https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest"
@@ -109,7 +109,7 @@ h1, h2, h3, label, .stRadio>label, .stSelectbox>div>div>div>input { color: #ffff
 """, unsafe_allow_html=True)
 
 # ---- UI ----
-st.markdown("<h1 style='color:#00ff84;'>🧮 Global Crypto Options & Greeks Calculator</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='color:#00ff84;'>🧮 Global Options & Crypto Futures Calculator</h1>", unsafe_allow_html=True)
 st.markdown(
     """<p style='color:#b2ffb2'>Margin, Greeks & risk calculator
     <br> <span style='color:#00fff7'>powered by CoinMarketCap API and Black-Scholes</span>.</p>""",
@@ -129,11 +129,29 @@ with col2:
     side = st.radio("Position Side", ["long", "short"], horizontal=True)
     fetch_btn = st.button("🔄 Fetch Latest Price")
 
+# ------------- Store and Use Live Price for Greeks -------------
+if 'live_price' not in st.session_state:
+    st.session_state.live_price = 0.0
+
+if fetch_btn:
+    live_price = fetch_price(symbol)
+    if live_price:
+        st.session_state.live_price = live_price
+        st.success(f"Fetched live price for {symbol.upper()}: ${live_price:,.2f}")
+        st.markdown(
+            f"<div class='metric-green'>Live {symbol.upper()} Price: <b>${live_price:,.2f}</b></div>",
+            unsafe_allow_html=True,
+        )
+    else:
+        st.session_state.live_price = 0.0
+
 # --- OPTIONS (Call/Put Greeks) ---
 st.markdown("---")
 st.markdown("<h3 style='color:#e9f28d;'>Option Greeks Calculator (Black-Scholes)</h3>", unsafe_allow_html=True)
 with st.expander("Show Greeks Calculator"):
-    S = st.number_input("Spot Price (S)", min_value=0.0, value=entry_price if entry_price > 0 else 50000.0)
+    # Default Spot Price for Greeks: live price if fetched, fallback to 50000.0
+    default_spot = st.session_state.live_price if st.session_state.live_price > 0 else 50000.0
+    S = st.number_input("Spot Price (S)", min_value=0.0, value=default_spot)
     K = st.number_input("Strike Price (K)", min_value=0.0, value=50000.0)
     T = st.number_input("Time to Expiry (years, e.g. 0.25)", min_value=0.001, value=0.25)
     r = st.number_input("Risk-Free Rate (annual, decimal, e.g. 0.06)", min_value=0.0, value=0.06)
@@ -155,15 +173,6 @@ with st.expander("Show Greeks Calculator"):
         })
         st.markdown("<h4 style='margin-top:20px;color:#fecb2f'>Greeks Table</h4>", unsafe_allow_html=True)
         st.dataframe(gdf)
-
-if fetch_btn:
-    live_price = fetch_price(symbol)
-    if live_price:
-        st.markdown(
-            f"<div class='metric-green'>Live {symbol.upper()} Price: <b>${live_price:,.2f}</b></div>",
-            unsafe_allow_html=True,
-        )
-        entry_price = live_price
 
 if entry_price > 0.0 and contract_size > 0.0 and leverage > 0:
     ini_margin = calculate_initial_margin(contract_size, leverage)
